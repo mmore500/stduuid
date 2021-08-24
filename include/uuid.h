@@ -17,7 +17,7 @@
 #include <atomic>
 
 // #include <span>
-#include "../gsl/gsl"
+#include "../gsl/span"
 
 #ifdef _WIN32
 
