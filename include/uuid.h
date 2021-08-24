@@ -15,7 +15,9 @@
 #include <chrono>
 #include <numeric>
 #include <atomic>
-#include <span>
+
+// #include <span>
+#include "../gsl/gsl"
 
 #ifdef _WIN32
 
@@ -44,13 +46,13 @@
 
 namespace uuids
 {
-#ifdef __cpp_lib_span
-   template <class ElementType, std::size_t Extent>
-   using span = std::span<ElementType, Extent>;
-#else
+// #ifdef __cpp_lib_span
+//    template <class ElementType, std::size_t Extent>
+//    using span = std::span<ElementType, Extent>;
+// #else
    template <class ElementType, std::ptrdiff_t Extent>
    using span = gsl::span<ElementType, Extent>;
-#endif
+// #endif
 
    namespace detail
    {
