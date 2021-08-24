@@ -26,7 +26,7 @@
 #endif
 
 #ifdef UUID_TIME_GENERATOR
-#include <iphlpapi.h> 
+#include <iphlpapi.h>
 #pragma comment(lib, "IPHLPAPI.lib")
 #endif
 
@@ -101,14 +101,14 @@ namespace uuids
 
          static constexpr unsigned int block_bytes = 64;
 
-         inline static uint32_t left_rotate(uint32_t value, size_t const count) 
+         inline static uint32_t left_rotate(uint32_t value, size_t const count)
          {
             return (value << count) ^ (value >> (32 - count));
          }
 
          sha1() { reset(); }
 
-         void reset() 
+         void reset()
          {
             m_digest[0] = 0x67452301;
             m_digest[1] = 0xEFCDAB89;
@@ -119,7 +119,7 @@ namespace uuids
             m_byteCount = 0;
          }
 
-         void process_byte(uint8_t octet) 
+         void process_byte(uint8_t octet)
          {
             this->m_block[this->m_blockByteIndex++] = octet;
             ++this->m_byteCount;
@@ -130,11 +130,11 @@ namespace uuids
             }
          }
 
-         void process_block(void const * const start, void const * const end) 
+         void process_block(void const * const start, void const * const end)
          {
             const uint8_t* begin = static_cast<const uint8_t*>(start);
             const uint8_t* finish = static_cast<const uint8_t*>(end);
-            while (begin != finish) 
+            while (begin != finish)
             {
                process_byte(*begin);
                begin++;
@@ -147,7 +147,7 @@ namespace uuids
             process_block(block, block + len);
          }
 
-         uint32_t const * get_digest(digest32_t digest) 
+         uint32_t const * get_digest(digest32_t digest)
          {
             size_t const bitCount = this->m_byteCount * 8;
             process_byte(0x80);
@@ -177,7 +177,7 @@ namespace uuids
             return digest;
          }
 
-         uint8_t const * get_digest_bytes(digest8_t digest) 
+         uint8_t const * get_digest_bytes(digest8_t digest)
          {
             digest32_t d32;
             get_digest(d32);
@@ -211,7 +211,7 @@ namespace uuids
          }
 
       private:
-         void process_block() 
+         void process_block()
          {
             uint32_t w[80];
             for (size_t i = 0; i < 16; i++) {
@@ -230,7 +230,7 @@ namespace uuids
             uint32_t d = m_digest[3];
             uint32_t e = m_digest[4];
 
-            for (std::size_t i = 0; i < 80; ++i) 
+            for (std::size_t i = 0; i < 80; ++i)
             {
                uint32_t f = 0;
                uint32_t k = 0;
@@ -311,27 +311,27 @@ namespace uuids
       // N bit pattern: 0xxx
       // > the first 6 octets of the UUID are a 48-bit timestamp (the number of 4 microsecond units of time since 1 Jan 1980 UTC);
       // > the next 2 octets are reserved;
-      // > the next octet is the "address family"; 
+      // > the next octet is the "address family";
       // > the final 7 octets are a 56-bit host ID in the form specified by the address family
       ncs,
-      
-      // RFC 4122/DCE 1.1 
+
+      // RFC 4122/DCE 1.1
       // N bit pattern: 10xx
       // > big-endian byte order
       rfc,
-      
+
       // Microsoft Corporation backward compatibility
       // N bit pattern: 110x
       // > little endian byte order
-      // > formely used in the Component Object Model (COM) library      
+      // > formely used in the Component Object Model (COM) library
       microsoft,
-      
+
       // reserved for possible future definition
-      // N bit pattern: 111x      
+      // N bit pattern: 111x
       reserved
    };
 
-   // indicated by a bit pattern in octet 6, marked with M in xxxxxxxx-xxxx-Mxxx-xxxx-xxxxxxxxxxxx   
+   // indicated by a bit pattern in octet 6, marked with M in xxxxxxxx-xxxx-Mxxx-xxxx-xxxxxxxxxxxx
    enum class uuid_version
    {
       none = 0, // only possible for nil or invalid uuids
@@ -363,14 +363,14 @@ namespace uuids
       {
          std::copy(std::cbegin(bytes), std::cend(bytes), std::begin(data));
       }
-      
+
       template<typename ForwardIterator>
       explicit uuid(ForwardIterator first, ForwardIterator last)
       {
          if (std::distance(first, last) == 16)
             std::copy(first, last, std::begin(data));
       }
-      
+
       constexpr uuid_variant variant() const noexcept
       {
          if ((data[8] & 0x80) == 0x00)
@@ -512,7 +512,7 @@ namespace uuids
       friend bool operator<(uuid const & lhs, uuid const & rhs) noexcept;
 
       template <class Elem, class Traits>
-      friend std::basic_ostream<Elem, Traits> & operator<<(std::basic_ostream<Elem, Traits> &s, uuid const & id);  
+      friend std::basic_ostream<Elem, Traits> & operator<<(std::basic_ostream<Elem, Traits> &s, uuid const & id);
    };
 
    // --------------------------------------------------------------------------------------------------------------------------
@@ -539,7 +539,7 @@ namespace uuids
    {
       // save current flags
       std::ios_base::fmtflags f(s.flags());
-      
+
       // manipulate stream as needed
       s << std::hex << std::setfill(static_cast<Elem>('0'))
          << std::setw(2) << (int)id.data[0]
@@ -565,7 +565,7 @@ namespace uuids
 
       // restore original flags
       s.flags(f);
-      
+
       return s;
    }
 
@@ -581,7 +581,7 @@ namespace uuids
 
    inline void swap(uuids::uuid & lhs, uuids::uuid & rhs) noexcept
    {
-      lhs.swap(rhs);   
+      lhs.swap(rhs);
    }
 
    // --------------------------------------------------------------------------------------------------------------------------
@@ -702,7 +702,7 @@ namespace uuids
 #endif
 
    template <typename UniformRandomNumberGenerator>
-   class basic_uuid_random_generator 
+   class basic_uuid_random_generator
    {
    public:
       using engine_type = UniformRandomNumberGenerator;
@@ -735,7 +735,7 @@ namespace uuids
    };
 
    using uuid_random_generator = basic_uuid_random_generator<std::mt19937>;
-   
+
    class uuid_name_generator
    {
    public:
@@ -752,7 +752,7 @@ namespace uuids
       }
 
    private:
-      void reset() 
+      void reset()
       {
          hasher.reset();
          std::byte bytes[16];
@@ -807,12 +807,12 @@ namespace uuids
       std::optional<mac_address> device_address;
 
       bool get_mac_address()
-      {         
+      {
          if (device_address.has_value())
          {
             return true;
          }
-         
+
 #ifdef _WIN32
          DWORD len = 0;
          auto ret = GetAdaptersInfo(nullptr, &len);
